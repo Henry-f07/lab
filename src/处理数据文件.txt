@@ -1,0 +1,53 @@
+package yq;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class yq {
+
+	public static void main(String[] args) throws IOException{
+		
+		File file = new File("D:\\data\\yq_in.txt");//源文件	
+		Scanner in = new Scanner(file);
+        ArrayList<String> line = new ArrayList<String>();//动态数组求行数
+		while(in.hasNextLine())
+		{
+			line.add(in.nextLine());
+		}
+		in.close();
+		int sum = line.size();//所需数组个数
+		String[] province = new String[sum];//存放省份
+		String[] formation = new String[sum];//存放市和人数
+		for(int i=0;i<sum;i++)
+		{
+			province[i] = line.get(i).toString().substring(0,line.get(i).toString().indexOf("\t"));//获取省份
+			formation[i] = line.get(i).toString().substring(line.get(i).toString().indexOf("\t")+1);//获取市和人数
+		}
+		FileOutputStream fos = new FileOutputStream("D:\\data\\yq_out2.txt");
+		PrintStream print = new PrintStream(fos);
+		String provinceTemp = province[0];//第一个省份
+		print.println(provinceTemp);//打印第一个省份
+		for(int i=0; i<sum; i++)
+		{
+			if(!province[i].equals(provinceTemp))//判断省份，省份不同则换行输出省份和信息
+			{
+				print.println();
+				provinceTemp=province[i];
+				print.println(provinceTemp);
+				if(!formation[i].substring(0,3).equals("待明确"))//排除新一行是待明确地区的情况
+				{
+					print.println(formation[i]);
+				}
+			}
+			else
+			{
+				if(!formation[i].substring(0,3).equals("待明确"))//排除待明确地区
+				{
+					print.println(formation[i]);
+				}
+			}
+		}
+		print.close();
+	}
+}
